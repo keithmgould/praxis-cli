@@ -13,3 +13,5 @@ This table maps each practice to the agent(s) that own it.
 | [review-content-quality](../practices/review-content-quality.md) | **Stewart** ([Praxis Steward](../experts/praxis-steward.md)) |
 | [audit-framework-health](../practices/audit-framework-health.md) | **Stewart** ([Praxis Steward](../experts/praxis-steward.md)) |
 | [challenge-contributor-design](../practices/challenge-contributor-design.md) | **Remy** ([Praxis Recruiter](../experts/praxis-recruiter.md)) |
+| [review-expert-definition](../practices/review-expert-definition.md) | **Remy** ([Praxis Recruiter](../experts/praxis-recruiter.md)) |
+| [review-practice-definition](../practices/review-practice-definition.md) | **Remy** ([Praxis Recruiter](../experts/praxis-recruiter.md)) |

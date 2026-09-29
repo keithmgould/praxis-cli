@@ -51,13 +51,15 @@ my-org/
 ├── experts/
 │   ├── README.md
 │   ├── praxis-steward.md        ← built-in: knowledge framework steward
-│   └── praxis-recruiter.md      ← built-in: talent and team sourcing
+│   └── praxis-recruiter.md      ← built-in: designs and reviews experts and practices
 ├── practices/
 │   ├── README.md
 │   ├── audit-framework-health.md      ← starter practices
 │   ├── challenge-contributor-design.md
 │   ├── guide-content-placement.md
-│   └── review-content-quality.md
+│   ├── review-content-quality.md
+│   ├── review-expert-definition.md
+│   └── review-practice-definition.md
 ├── reference/
 │   ├── README.md
 │   ├── practices-index.md       ← starter reference docs
@@ -67,6 +69,8 @@ my-org/
 ```
 
 New documents are created with `praxis add`, which writes them from templates compiled into the CLI — the scaffold ships starter content, not template files.
+
+One starter expert reviews the others. Remy (`praxis-recruiter.md`) declares `validates:` over `experts/` and `practices/`, so after `praxis compile` its profile in `agent-profiles/` is a spec, and `praxis eval run --type Remy` reviews every expert and practice definition against Remy's two review practices. The scaffold config lists `agent-profiles` under `sources` and accepts `*.expert.md` as spec files for exactly this.
 
 ## Safe to re-run
 
@@ -97,7 +101,7 @@ The eval-layer `.praxis/config.json` (default init):
   "reviewers": [
     {
       "name": "default",
-      "model": "x-ai/grok-4.1-fast",
+      "model": "x-ai/grok-4.3",
       "apiKeyEnvVar": "OPENROUTER_API_KEY"
     }
   ]
@@ -110,7 +114,7 @@ With `--spec-layer`, the config also wires the authoring taxonomy:
 
 ```json
 {
-  "sources": ["experts", "practices", "reference", "context"],
+  "sources": ["experts", "practices", "reference", "context", "agent-profiles"],
   "expertsDir": "experts",
   "practicesDir": "practices",
   "agentProfilesOutputDir": "./agent-profiles",
@@ -118,10 +122,11 @@ With `--spec-layer`, the config also wires the authoring taxonomy:
   "reviewers": [
     {
       "name": "default",
-      "model": "x-ai/grok-4.1-fast",
+      "model": "x-ai/grok-4.3",
       "apiKeyEnvVar": "OPENROUTER_API_KEY"
     }
-  ]
+  ],
+  "specFilePattern": "{README.md,*.expert.md}"
 }
 ```
 
