@@ -87,7 +87,7 @@ const evalCommand: CommandRegistrar = (program) => {
 
   evalCmd
     .command("compact")
-    .description("Fold the ledger's run files into one archive per month")
+    .description("Fold the ledger's run files into one stamped archive")
     .addHelpText("after", `\n${evalCompactHelp}`)
     .action(compactLedgerOrchestrator);
 
