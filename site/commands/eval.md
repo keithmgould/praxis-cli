@@ -178,7 +178,7 @@ Safe to run any time: entries belonging to currently configured reviewers are ne
 
 ### `praxis eval compact`
 
-Folds the ledger's run files into one archive per calendar month. Does not call any API, and changes no record.
+Folds the ledger's run files into one stamped archive. Does not call any API, and changes no record.
 
 ```bash
 praxis eval compact

@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.1] - 2026-09-29
+
+### Fixed
+
+- **`eval compact`'s one-line description said "one archive per month".** It writes a single stamped `<id>-compacted.jsonl`; the per-month naming was replaced before 2.6.0 shipped, but the command's own description — what `praxis eval --help` and `praxis eval compact --help` print — kept the old wording, as did the opening line of the command's page on the docs site. The long-form help document was already correct, and no behavior changes. Help is shipped surface, and a surface that describes itself wrongly is the one thing an agent cannot check against.
+
 ## [2.6.0] - 2026-09-29
 
 The ledger-housekeeping release. A project that runs Praxis daily accumulates run files fast, and most of them record that nothing happened: in zarpay's own repo, 82% of 1,126 run files were all cache hits and 94% held a single record, so 1.1 MB of evidence cost 4.7 MB on disk and 1,126 file opens on every command that reads the ledger. `praxis eval compact` folds that partition into one archive without touching a record.

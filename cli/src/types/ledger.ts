@@ -191,7 +191,7 @@ export interface LedgerEntry {
 export interface CompactLedgerResult {
   /** Files in the runs partition before the fold. */
   filesBefore: number;
-  /** Files after: one archive per month, plus anything left in place. */
+  /** Files after: the archive, plus anything left in place. */
   filesAfter: number;
   /** Run records carried into an archive; every one of them byte-identical. */
   runsCompacted: number;

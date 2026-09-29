@@ -6,7 +6,7 @@ import compactView from "@/views/compact-view.js";
 
 /**
  * What `praxis eval compact` does: fold the ledger's run files into one
- * archive per month — the same records, in far fewer files.
+ * archive — the same records, in far fewer files.
  *
  * Nothing is dropped, summarized, or rewritten. One file per run is
  * what keeps concurrent runs conflict-free while they are being
