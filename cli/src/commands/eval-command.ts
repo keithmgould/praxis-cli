@@ -1,6 +1,7 @@
 import type { CommandRegistrar } from "@framework/types.js";
 
 import evalCiHelp from "@/help/eval-ci-help.md";
+import evalCompactHelp from "@/help/eval-compact-help.md";
 import evalCritiquesHelp from "@/help/eval-critiques-help.md";
 import evalHelp from "@/help/eval-help.md";
 import evalPruneHelp from "@/help/eval-prune-help.md";
@@ -9,6 +10,7 @@ import evalReviewHelp from "@/help/eval-review-help.md";
 import evalRunHelp from "@/help/eval-run-help.md";
 import evalVerdictHelp from "@/help/eval-verdict-help.md";
 import ciRunOrchestrator from "@/orchestrators/ci-run-orchestrator.js";
+import compactLedgerOrchestrator from "@/orchestrators/compact-ledger-orchestrator.js";
 import listCritiquesOrchestrator from "@/orchestrators/list-critiques-orchestrator.js";
 import pruneCacheOrchestrator from "@/orchestrators/prune-cache-orchestrator.js";
 import reportEvalOrchestrator from "@/orchestrators/report-eval-orchestrator.js";
@@ -82,6 +84,12 @@ const evalCommand: CommandRegistrar = (program) => {
     .description("Drop cached verdicts that no configured reviewer can hit")
     .addHelpText("after", `\n${evalPruneHelp}`)
     .action(pruneCacheOrchestrator);
+
+  evalCmd
+    .command("compact")
+    .description("Fold the ledger's run files into one archive per month")
+    .addHelpText("after", `\n${evalCompactHelp}`)
+    .action(compactLedgerOrchestrator);
 
   evalCmd
     .command("report [target]")

@@ -187,6 +187,16 @@ export interface LedgerEntry {
   evidence: LedgerEvidence | null;
 }
 
+/** What one compaction folded — see `RunStore.compact`. */
+export interface CompactLedgerResult {
+  /** Files in the runs partition before the fold. */
+  filesBefore: number;
+  /** Files after: one archive per month, plus anything left in place. */
+  filesAfter: number;
+  /** Run records carried into an archive; every one of them byte-identical. */
+  runsCompacted: number;
+}
+
 /** Where a run landed. */
 export interface WriteLedgerRunResult {
   runId: string;

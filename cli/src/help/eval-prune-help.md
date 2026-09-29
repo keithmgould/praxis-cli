@@ -6,7 +6,8 @@ Behavior:
   configured reviewer; entries a configured reviewer can still hit are
   never touched. This is the epoch structure's other half: a behavioral
   change writes new cache keys, and prune clears the orphans the old
-  keys left behind. The ledger is never pruned — evidence is forever.
+  keys left behind. The ledger is never pruned — evidence is forever;
+  `eval compact` only changes how many files hold it.
 
 Example:
   $ praxis eval prune

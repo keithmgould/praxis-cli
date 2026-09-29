@@ -104,6 +104,7 @@ calls · **[scratch]** run in a copy.
 | STALE verdict [scratch, free] | `echo "// drift" >> src/services/redeem-coupon.ts` in a copy → `eval verdict` shows `[STALE] Cached result is outdated` for every reviewer (verified 2026-09-08) |
 | Deterministic UNVERIFIED [scratch, free] | `chmod 000 src/services/rank-parlors.ts` in a copy → `eval run --reviewer counter` reports the unit UNVERIFIED and exits 1; `eval ci` likewise. Free and reproducible — no live-model quirk needed |
 | `eval prune` [free] | Prunes only orphaned reviewer hashes; after the 2026-09-07 epoch it swept 57 pre-epoch entries (canary stayed all-hits — live entries untouched). A second run finds nothing to do |
+| `eval compact` [free] | Folds `.praxis/ledger/runs/` into one `<id>-compacted.jsonl` and reports the counts. Records must be byte-identical across it — `cat runs/*.jsonl \| sort` before and after must diff clean, and `eval report --json` / `eval critiques --json` / `debt report` must be unchanged. A second run finds nothing to do. Copy the archive to a second `-compacted.jsonl` name: every count must stay the same (readers dedupe by record id, the merged-archive case) |
 
 ### Reports (pure reads — never a reviewer call) [free]
 

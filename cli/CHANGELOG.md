@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`praxis eval compact` — the ledger's run files, folded into one archive.** One file per run is what keeps two runs landing at once from clobbering each other; it is a write-time property, not a storage format. Sealed history has no writer left to conflict with, and a run whose every unit was a cache hit is a single line paying for a whole disk block. `eval compact` folds `.praxis/ledger/runs/` into one `<id>-compacted.jsonl`: zarpay/core's 1,126 files (1.1 MB of records, 4.7 MB on disk) became one file of 1.1 MB, and every command that reads the ledger went from 1,126 opens to one. Records are **moved, never rewritten** — a source file's bytes are appended verbatim, so the record set is byte-identical and `eval report`, `eval critiques`, `debt report` and the orientation screen produce exactly what they produced before. Layout, not retention: nothing is dropped, summarized, or aged out. A file holding no run record is left where it is, and re-running finds nothing to do.
+
+- **The ledger's readers deduplicate by record id.** The archive is stamped with a minted id rather than named for its contents, so two contributors compacting on their own branches produce two files that merge with no conflict — and `RunStore.runs()`/`critiques()` take the first record per id, so the history the two archives share is counted once. Without both halves, a merge would silently double every count the shared runs contribute.
+
 ## [2.5.0] - 2026-09-23
 
 The measurement-you-can-gate-on release. Praxis now states the two numbers a team maintains the way it maintains test coverage — **observed**, how much of the corpus any spec governs, and **passing**, how much of it every reviewer's verdict clears — and every report surface was made bullet-proof about units: no number renders without its denominator, no reviewer counts are silently pooled, and nothing ships that pretends to measure what it doesn't.

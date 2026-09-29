@@ -6,7 +6,7 @@ import { DOCS_LINK, registeredHelps } from "@tests/helpers/command-help.js";
 describe("evalCommand", () => {
   const helps = registeredHelps(evalCommand);
 
-  it("registers the group and its seven subcommands", () => {
+  it("registers the group and its eight subcommands", () => {
     const paths = helps.map((entry) => entry.path);
 
     expect(paths).toEqual([
@@ -16,6 +16,7 @@ describe("evalCommand", () => {
       "eval critiques",
       "eval review",
       "eval prune",
+      "eval compact",
       "eval report",
       "eval verdict",
     ]);
