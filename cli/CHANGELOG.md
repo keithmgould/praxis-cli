@@ -5,13 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.6.0] - 2026-09-29
+
+The ledger-housekeeping release. A project that runs Praxis daily accumulates run files fast, and most of them record that nothing happened: in zarpay's own repo, 82% of 1,126 run files were all cache hits and 94% held a single record, so 1.1 MB of evidence cost 4.7 MB on disk and 1,126 file opens on every command that reads the ledger. `praxis eval compact` folds that partition into one archive without touching a record.
+
+Nothing about the ledger's contract changes. It is still plain JSONL, still committed, still append-only, still read the same way — there is simply one file where there were a thousand. Upgrading requires nothing; the command is there when a project wants it.
 
 ### Added
 
 - **`praxis eval compact` — the ledger's run files, folded into one archive.** One file per run is what keeps two runs landing at once from clobbering each other; it is a write-time property, not a storage format. Sealed history has no writer left to conflict with, and a run whose every unit was a cache hit is a single line paying for a whole disk block. `eval compact` folds `.praxis/ledger/runs/` into one `<id>-compacted.jsonl`: zarpay/core's 1,126 files (1.1 MB of records, 4.7 MB on disk) became one file of 1.1 MB, and every command that reads the ledger went from 1,126 opens to one. Records are **moved, never rewritten** — a source file's bytes are appended verbatim, so the record set is byte-identical and `eval report`, `eval critiques`, `debt report` and the orientation screen produce exactly what they produced before. Layout, not retention: nothing is dropped, summarized, or aged out. A file holding no run record is left where it is, and re-running finds nothing to do.
 
-- **The ledger's readers deduplicate by record id.** The archive is stamped with a minted id rather than named for its contents, so two contributors compacting on their own branches produce two files that merge with no conflict — and `RunStore.runs()`/`critiques()` take the first record per id, so the history the two archives share is counted once. Without both halves, a merge would silently double every count the shared runs contribute.
+### Changed
+
+- **The ledger's readers deduplicate by record id.** The archive is stamped with a minted id rather than named for its contents, so two contributors compacting on their own branches produce two files that merge with no conflict — and `RunStore.runs()`/`critiques()` take the first record per id, so the history the two archives share is counted once. Without both halves, a merge would silently double every count the shared runs contribute. Records have always carried collision-safe ids; nothing that is not a genuine duplicate is ever dropped.
+
+- **A run file may hold more than one run.** `RunFile` reads a file as a sequence of records rather than as one run and the critiques beneath it — a freshly written file is simply the one-run case, so every file ever written parses exactly as before. This is what lets an archive be read by the same code, with no second format and no migration.
 
 ## [2.5.0] - 2026-09-23
 
