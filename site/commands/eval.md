@@ -176,6 +176,28 @@ Safe to run any time: entries belonging to currently configured reviewers are ne
 
 ---
 
+### `praxis eval compact`
+
+Folds the ledger's run files into one archive per calendar month. Does not call any API, and changes no record.
+
+```bash
+praxis eval compact
+```
+
+A busy project accumulates run files fast, and most of them are tiny: a run whose every unit came back a cache hit records one line and nothing else. In zarpay's own repo, 1,126 run files held 1.1 MB of records — 82% of them all-hit runs, 94% a single record — and cost 4.7 MB on disk, because a file below one disk block still costs a whole one. Every command that reads the ledger opened all 1,126.
+
+Compaction rewrites that to a single `.praxis/ledger/runs/<id>-compacted.jsonl` and one open. The records are **moved, not rewritten**: the bytes appended to the archive are each source file's own, in the order they were written, so the record set is byte-identical and `eval report`, `eval critiques`, `debt report` and the orientation screen all produce exactly what they produced before.
+
+This is a layout change, not a retention policy. Nothing is dropped, summarized, or aged out — the ledger still answers what has ever happened, in the same format, read the same way. A file holding no run record is left exactly where it is.
+
+The archive is named for **when it was made, not what it holds**, which is what makes it safe on a team. Two people who compact on their own branches write two differently named files, so the merge has no conflict to resolve — and the history they both carry is not double-counted, because runs and critiques are identified by their ids and the readers take the first copy of each.
+
+Safe to run any time; a second run finds nothing to do. Because it rewrites committed files, run it on a clean tree and commit the result on its own.
+
+**Exit code:** Always 0.
+
+---
+
 ## praxis eval critiques
 
 The ledger's critiques as a browsable list — each with its id, its words, and where it stands: **untriaged** (triage's queue), **unmatched** (curate's queue), **labeled**, **dismissed**, or **advisory** — recorded by [`praxis feedback`](/commands/feedback) and in no queue at all, so it is never counted as work waiting. Pure read; never a reviewer call.
@@ -209,7 +231,9 @@ The dismissal count over all critiques is the **reviewer-trust signal**, printed
 
 Every `eval run` writes durable evidence to `.praxis/ledger/runs/<run_id>.jsonl` — one file per reviewer per invocation, committed to git like the rest of `.praxis/`. The first line is the **run record**: what ran, against which commit and branch, cache hits and misses, verdict counts, and the provider cost (tokens and dollars). Each following line is a **critique record** — one per issue found, carrying full provenance: the exact target and spec content hashes, and the reviewer's behavioral hash.
 
-The cache answers "is this compliant now" and overwrites; the ledger answers "what has ever happened" and never does. Records are append-only — a run file is written once and never touched again.
+The cache answers "is this compliant now" and overwrites; the ledger answers "what has ever happened" and never does. Records are append-only — a record is written once and never touched again.
+
+One file per run is what keeps two runs landing at once from clobbering each other; it is a write-time property, not a storage format. Once history is sealed, [`praxis eval compact`](#praxis-eval-compact) folds those files into one stamped archive without changing a single record.
 
 Two things never write the ledger: `eval ci` (CI verifies without writing — the branch's own runs are the evidence) and cache hits (nothing new was reviewed; they are counted on the run record instead).
 

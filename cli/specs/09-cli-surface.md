@@ -80,6 +80,7 @@ One CLI, two reading styles. The split is by **command default plus `--json`**, 
 - `praxis axioms triage | curate | reassign <id> | deprecate <id> | merge <ids...> | show <id> | list` (03, 04)
 - `praxis eval critiques [target] [--state] [--axiom] [--json]` — the id-browsing surface reassign and review take their ids from (04)
 - `praxis eval prune` — drops cache entries no configured reviewer can hit
+- `praxis eval compact` — folds the ledger's run files into one stamped archive (05); records move, never change
 - `praxis debt report [--json]` (07)
 - `praxis harness suggest` — roadmap (withdrawn 2026-09-07 with the harness surfaces, roadmap/08)
 

@@ -1,38 +1,47 @@
 import type { LedgerCritiqueRecord, LedgerRecord, LedgerRunRecord } from "@/types.js";
 
 /**
- * One run file's format: the run record on line one, one critique
- * record per line beneath, written whole and never touched again.
+ * One run file's format: run records, each followed by its critique
+ * records, one JSON object per line.
  *
- * Parsing is tolerant the way evidence reading must be: a file whose
- * first line is not a run record is not a run file (null), and a
- * malformed critique line loses one record, never the file. The store
- * owns the IO; this model owns the bytes.
+ * A freshly written file holds exactly one run — the write-once shape.
+ * A compacted file holds many, in the order they were written. Both are
+ * the same format read the same way: the file is a sequence of records,
+ * and every record carries the `run_id` that places it.
+ *
+ * Parsing is tolerant the way evidence reading must be: a file with no
+ * run record in it is not a run file (null), and a malformed line loses
+ * one record, never the file. The store owns the IO; this model owns
+ * the bytes.
  */
 export class RunFile {
-  /** The run record: line one. */
-  readonly run: LedgerRunRecord;
+  private readonly runRecords: LedgerRunRecord[];
 
-  private readonly critiqueLines: string[];
+  private readonly lines: string[];
 
-  private constructor(run: LedgerRunRecord, critiqueLines: string[]) {
-    this.run = run;
-    this.critiqueLines = critiqueLines;
+  private constructor(runRecords: LedgerRunRecord[], lines: string[]) {
+    this.runRecords = runRecords;
+    this.lines = lines;
   }
 
   /** Parses a run file's content, or null when it is not one. */
   static fromContent(content: string): RunFile | null {
-    const [firstLine, ...rest] = content.split("\n");
+    const lines = content.split("\n");
+    const runRecords: LedgerRunRecord[] = [];
 
-    try {
-      const run = JSON.parse(firstLine) as LedgerRunRecord;
+    for (const line of lines) {
+      if (!line.includes('"run"')) continue;
 
-      if (run.kind !== "run") return null;
+      try {
+        const record = JSON.parse(line) as LedgerRunRecord;
 
-      return new RunFile(run, rest);
-    } catch {
-      return null;
+        if (record.kind === "run") runRecords.push(record);
+      } catch {
+        // One malformed line loses one record, never the file.
+      }
     }
+
+    return runRecords.length === 0 ? null : new RunFile(runRecords, lines);
   }
 
   /** One run's records as its file content — the write-once shape. */
@@ -40,11 +49,16 @@ export class RunFile {
     return records.map((record) => JSON.stringify(record)).join("\n") + "\n";
   }
 
-  /** The critique records beneath the run; malformed lines skipped. */
+  /** The run records, in file order; malformed lines skipped. */
+  runs(): LedgerRunRecord[] {
+    return this.runRecords;
+  }
+
+  /** The critique records, in file order; malformed lines skipped. */
   critiques(): LedgerCritiqueRecord[] {
     const critiques: LedgerCritiqueRecord[] = [];
 
-    for (const line of this.critiqueLines) {
+    for (const line of this.lines) {
       if (!line.includes('"critique"')) continue;
 
       try {
