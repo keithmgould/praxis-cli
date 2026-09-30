@@ -9,22 +9,19 @@ type: practice
 
 ## Objective
 
-A practice is inlined into its expert's compiled profile, and the reviewer checks each governed file against it. Praxis holds the standards a linter cannot: if you can write the check, write the check; if you can only describe the standard, write the practice. A practice carrying mechanical criteria asks the reviewer to be a worse linter; one stating bare rules leaves it to guess at the standard.
+A practice's criteria are what a reviewer holds each governed file to. A criterion a tool could decide sends the reviewer to do a linter's job badly; a bare rule with no why, boundary case, or example leaves it to guess at the standard. Judge each criterion in the file in front of you on those counts.
 
 ## Process
 
-1. Read each criterion and ask whether a regex, an AST query, or a type check could decide it. If so, it is a lint rule.
-2. Read each criterion for its frame: is the why stated beside the what?
-3. Look for the boundary case and the negative constraint: what is acceptable, what is not, what is forbidden.
-4. Read the wording for severity: binding words for required criteria, advisory words for optional ones.
-5. Check that examples live in the prose, not as pointers to live files.
-6. Report each finding with the criterion it applies to.
+1. For each criterion, ask whether a regex, an AST query, or a type check could decide it.
+2. Look for the why, the boundary case, the negative constraint, and the severity word.
+3. Report each finding with the criterion it applies to.
 
 ## Criteria
 
-- [ ] **Every criterion is a judgment.** If a regex, AST query, or type check could decide it with no false positives, it is a lint rule; if two senior engineers could never disagree on a verdict, it is not a criterion. "Exports a function named `run`" is lint; "does one thing; a second responsibility is a second service" is a criterion.
-- [ ] **The why is stated alongside the what.** "Error messages are written for the API consumer" gives the reviewer a reading frame; "error messages are descriptive" does not.
-- [ ] **The boundary case is shown.** "'rating must be a whole number from 1 to 5' is acceptable; 'invalid input' is not" calibrates more in one sentence than a paragraph of rules.
-- [ ] **What is not allowed is stated.** Negative constraints are flagged as reliably as missing qualities, but only when written down.
-- [ ] **Binding and advisory language are used on purpose.** "Must" and "never" fail a target; "should" and "prefer" warn. Severity is set by wording, so wording is a decision.
+- [ ] **Every criterion is a judgment.** If a regex, AST query, or type check could decide it with no false positives, or two senior readers could never disagree on a verdict, it is a lint rule. "Has a title" is lint; "the title says what the document is about" is a criterion.
+- [ ] **The why is stated alongside the what.** "Error messages are written for the person who hit them" gives a reading frame; "error messages are descriptive" does not.
+- [ ] **The boundary case is shown.** One acceptable and one unacceptable case side by side calibrate more than a paragraph of rules: "'rating must be a whole number from 1 to 5' is acceptable; 'invalid input' is not."
+- [ ] **What is not allowed is stated.** A negative constraint is flagged as reliably as a missing quality, but only when written down.
+- [ ] **Severity words are used on purpose.** "Must", "never", and "always" mark a criterion as required, and a violation fails the target; "should", "prefer", and "recommended" mark it optional, and a violation warns. A criterion with neither leaves severity to the reviewer.
 - [ ] **Examples live in the prose, frozen with the criterion they illustrate.** A pointer to a live file drifts the first time that file is edited; an example written here changes only when the practice does.

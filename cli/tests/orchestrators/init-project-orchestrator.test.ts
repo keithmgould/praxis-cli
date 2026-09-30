@@ -120,7 +120,7 @@ describe("initProjectOrchestrator", () => {
     expect(cfg.agentProfilesOutputDir).toBe("./agent-profiles");
     expect(cfg.plugins).toEqual([]);
     // agent-profiles is a source so compiled profiles are discovered as
-    // specs — Remy's profile reviews the experts and practices themselves.
+    // specs — the recruiter's profile reviews the experts and practices themselves.
     expect(cfg.sources).toEqual(["experts", "practices", "reference", "context", "agent-profiles"]);
     expect(cfg.specFilePattern).toBe("{README.md,*.expert.md}");
     expect(cfg.expertsDir).toBe("experts");

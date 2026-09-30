@@ -18,24 +18,24 @@ const SCAFFOLD_DIR = join(import.meta.dirname, "..", "..", "scaffold");
 /**
  * Integration test: init → compile → discover.
  *
- * The scaffold's Remy declares `validates:` over the experts and
+ * The scaffold's recruiter declares `validates:` over the experts and
  * practices directories, so its compiled profile must come back from
  * spec discovery as a domain whose targets are the other definitions.
  * Three scaffold facts have to agree for that to hold — the profiles
  * directory is a source, the spec pattern accepts `*.expert.md`, and
- * Remy's globs name the right directories — and no unit test pins the
+ * the recruiter's globs name the right directories — and no unit test pins the
  * chain. This one does, offline and against the real scaffold.
  */
-describe("Remy reviews the experts and practices", () => {
+describe("the recruiter reviews the experts and practices", () => {
   let dir: string;
-  let remy: ValidationDomain | undefined;
+  let recruiter: ValidationDomain | undefined;
 
   /** A domain's targets as project-relative paths, sorted. */
   const targetsOf = (domain: ValidationDomain | undefined): string[] =>
     (domain?.targetFiles ?? []).map((path) => path.slice(dir.length + 1)).sort();
 
   beforeAll(async () => {
-    dir = join(tmpdir(), `praxis-remy-${randomUUID()}`);
+    dir = join(tmpdir(), `praxis-recruiter-${randomUUID()}`);
 
     await initProjectOrchestrator(new CommandContext(), {
       directory: dir,
@@ -48,20 +48,20 @@ describe("Remy reviews the experts and practices", () => {
     await compileExpertsService(cfg, { plugins: [] });
 
     const domains = discoverDomainsService(cfg, {});
-    remy = domains.find((domain) => domain.type === "Remy");
+    recruiter = domains.find((domain) => domain.type === "praxis-recruiter");
   });
 
   afterAll(() => {
     rmSync(dir, { recursive: true, force: true });
   });
 
-  it("compiles Remy into a spec that discovery finds under its alias", () => {
-    expect(remy).toBeDefined();
-    expect(remy?.specPath).toBe(join(dir, "agent-profiles", "remy.expert.md"));
+  it("compiles the recruiter into a spec that discovery finds under its alias", () => {
+    expect(recruiter).toBeDefined();
+    expect(recruiter?.specPath).toBe(join(dir, "agent-profiles", "praxis-recruiter.expert.md"));
   });
 
-  it("governs every expert and practice definition, including Remy's own source", () => {
-    expect(targetsOf(remy)).toEqual([
+  it("governs every expert and practice definition, including the recruiter's own source", () => {
+    expect(targetsOf(recruiter)).toEqual([
       "experts/praxis-recruiter.md",
       "experts/praxis-steward.md",
       "practices/audit-framework-health.md",
@@ -74,7 +74,7 @@ describe("Remy reviews the experts and practices", () => {
   });
 
   it("never hands the reviewer a directory README as a definition", () => {
-    const targets = targetsOf(remy);
+    const targets = targetsOf(recruiter);
 
     expect(targets.some((path) => path.endsWith("README.md"))).toBe(false);
   });
