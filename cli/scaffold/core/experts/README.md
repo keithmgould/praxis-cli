@@ -31,6 +31,8 @@ The expert file is the **entry point** for onboarding an agent. Its frontmatter 
 | `context` | Additional context files (conventions, lenses, etc.) | 1 (Always) |
 | `practices` | What this expert owns | 2 (With expert) |
 | `refs` | Supporting references | 3 (As needed) |
+| `validates` | Glob patterns for the files this expert's compiled profile reviews (compiles to the spec's `paths:`) | Eval |
+| `excludes` | Files structurally out of the expert's review scope | Eval |
 
 All paths in frontmatter are relative to the project root (the directory containing `.praxis/`).
 
@@ -61,6 +63,9 @@ practices:
 
 refs:
   - reference/{relevant-reference}.md
+
+validates:
+  - "{glob of the files this expert reviews}"
 ---
 
 # {expert_name} (a.k.a **{expert_name}**)

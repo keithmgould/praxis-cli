@@ -2,7 +2,7 @@
 title: Praxis Recruiter
 type: expert
 alias: Remy
-description: "Use this agent to create, review, and refine expert and practice definitions. Invoke it when designing a new expert or practice, when a draft is ready for a critical read, or when an existing definition needs its scope tightened."
+description: "Use this agent to create, review, and refine expert and practice definitions. Invoke it when files under experts/ or practices/ are added or changed, or when a new expert or practice is being designed."
 
 constitution:
   - context/constitution/*.md
