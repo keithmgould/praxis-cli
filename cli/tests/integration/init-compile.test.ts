@@ -89,10 +89,12 @@ describe("init → compile integration", () => {
     expect(files).toHaveLength(2);
   });
 
-  it("pure profiles do not contain Claude Code frontmatter", () => {
+  it("pure profiles carry eval-targeting frontmatter, never Claude Code agent frontmatter", () => {
     const content = readFileSync(join(dir, "agent-profiles", "praxis-steward.expert.md"), "utf-8");
-    expect(content).not.toMatch(/^---\n/);
+    expect(content).toMatch(/^---\ntype: "praxis-steward"\n/);
+    expect(content).toContain("cohort: by_directory");
     expect(content).not.toContain("name: praxis-steward");
+    expect(content).not.toContain("tools:");
     expect(content).toContain("# Expert");
   });
 

@@ -29,6 +29,7 @@ const SCAFFOLD_DIR = join(import.meta.dirname, "..", "..", "scaffold");
 describe("the recruiter reviews the experts and practices", () => {
   let dir: string;
   let recruiter: ValidationDomain | undefined;
+  let steward: ValidationDomain | undefined;
 
   /** A domain's targets as project-relative paths, sorted. */
   const targetsOf = (domain: ValidationDomain | undefined): string[] =>
@@ -49,6 +50,7 @@ describe("the recruiter reviews the experts and practices", () => {
 
     const domains = discoverDomainsService(cfg, {});
     recruiter = domains.find((domain) => domain.type === "praxis-recruiter");
+    steward = domains.find((domain) => domain.type === "praxis-steward");
   });
 
   afterAll(() => {
@@ -77,5 +79,15 @@ describe("the recruiter reviews the experts and practices", () => {
     const targets = targetsOf(recruiter);
 
     expect(targets.some((path) => path.endsWith("README.md"))).toBe(false);
+  });
+
+  it("compiles the steward into a by_directory spec over the context and reference folders", () => {
+    expect(steward?.cohort).toBe("by_directory");
+    expect((steward?.targetDirs ?? []).map((path) => path.slice(dir.length + 1)).sort()).toEqual([
+      "context/constitution",
+      "context/conventions",
+      "context/lenses",
+      "reference",
+    ]);
   });
 });

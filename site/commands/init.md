@@ -49,11 +49,9 @@ my-org/
 │   └── lenses/
 │       └── README.md
 ├── experts/
-│   ├── README.md
 │   ├── praxis-steward.md        ← built-in: knowledge framework steward
 │   └── praxis-recruiter.md      ← built-in: designs and reviews experts and practices
 ├── practices/
-│   ├── README.md
 │   ├── audit-framework-health.md      ← starter practices
 │   ├── challenge-contributor-design.md
 │   ├── guide-content-placement.md
@@ -70,7 +68,7 @@ my-org/
 
 New documents are created with `praxis add`, which writes them from templates compiled into the CLI — the scaffold ships starter content, not template files.
 
-One starter expert reviews the others. The recruiter (`praxis-recruiter.md`) declares `validates:` over `experts/` and `practices/`, so after `praxis compile` its profile in `agent-profiles/` is a spec, and `praxis eval run --type praxis-recruiter` reviews every expert and practice definition against its two review practices. The scaffold config lists `agent-profiles` under `sources` and accepts `*.expert.md` as spec files for exactly this.
+The two starter experts review the scaffold itself. The recruiter (`praxis-recruiter.md`) declares `validates:` over `experts/` and `practices/`, so after `praxis compile` its profile in `agent-profiles/` is a spec, and `praxis eval run --type praxis-recruiter` reviews every expert and practice definition, one file at a time, against its review practices. The steward (`praxis-steward.md`) declares `validates:` over `context/*` and `reference` with `cohort: by_directory`, so `praxis eval run --type praxis-steward` reviews each of those folders as one unit and can catch documents that disagree with their neighbors. The scaffold config lists `agent-profiles` under `sources` and accepts `*.expert.md` as spec files for exactly this.
 
 ## Safe to re-run
 

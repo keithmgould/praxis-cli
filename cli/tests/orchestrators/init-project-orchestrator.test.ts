@@ -222,7 +222,7 @@ describe("initProjectOrchestrator", () => {
     });
 
     // Scaffold files exist
-    expect(existsSync(join(dir, "experts", "README.md"))).toBe(true);
+    expect(existsSync(join(dir, "experts", "praxis-steward.md"))).toBe(true);
 
     // Unrelated files preserved
     expect(readFileSync(join(dir, "src", "app.ts"), "utf-8")).toBe("console.log('hello');\n");
