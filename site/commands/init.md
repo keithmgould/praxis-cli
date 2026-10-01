@@ -40,12 +40,10 @@ my-org/
 ├── context/
 │   ├── README.md
 │   ├── constitution/
-│   │   ├── README.md            ← validation spec
-│   │   ├── identity.md          ← starter: who you are
-│   │   └── principles.md        ← starter: what you value
+│   │   └── README.md            ← validation spec; your identity goes beside it
 │   ├── conventions/
 │   │   ├── README.md
-│   │   └── documentation.md     ← starter: writing conventions
+│   │   └── documentation.md     ← starter: how documents here are written
 │   └── lenses/
 │       └── README.md
 ├── experts/

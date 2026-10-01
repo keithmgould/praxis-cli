@@ -139,12 +139,13 @@ describe("init → compile integration", () => {
     expect(content).toContain("Audit Framework Health");
   });
 
-  it("praxis-steward agent contains inlined constitution", () => {
+  it("praxis-steward agent inlines the starter convention and no constitution until one is written", () => {
     const content = readFileSync(
       join(dir, "plugins", "praxis", "agents", "praxis-steward.md"),
       "utf-8",
     );
-    expect(content).toContain("# Constitution");
+    expect(content).toContain("Documentation Convention");
+    expect(content).not.toContain("# Constitution");
   });
 
   it("praxis-steward agent contains inlined reference", () => {
